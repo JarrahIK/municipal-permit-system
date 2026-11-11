@@ -1,0 +1,8 @@
+# DEVELOPMENT extras. Docker Compose merges this file automatically for a plain `docker compose up`.
+services:
+  db:
+    ports:
+      - "1433:1433"   # reachable from SSMS / Azure Data Studio
+  api:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development   # turns on the API docs page and the demo accounts

@@ -1,0 +1,37 @@
+# Try the API without any extra tool: open this file in Visual Studio (or VS Code + "REST Client"),
+# start the API (F5), and click "Send request" above any request.
+
+@host = http://localhost:5080
+
+### 1. Log in as the demo surveyor
+# @name staffLogin
+POST {{host}}/api/auth/staff/login
+Content-Type: application/json
+
+{ "employeeId": "SURV001", "password": "DevPass123!" }
+
+### 2. Who am I?  (uses the token from request 1)
+@token = {{staffLogin.response.body.$.accessToken}}
+GET {{host}}/api/auth/me
+Authorization: Bearer {{token}}
+
+### Register a new citizen
+POST {{host}}/api/auth/citizen/register
+Content-Type: application/json
+
+{
+  "nationalId": "2000000002",
+  "fullName": "Test Citizen",
+  "password": "Password123!",
+  "phoneNumber": "0792222222",
+  "address": "Amman, Jordan"
+}
+
+### Log in as the demo citizen
+POST {{host}}/api/auth/citizen/login
+Content-Type: application/json
+
+{ "nationalId": "1000000001", "password": "DevPass123!" }
+
+### Health check
+GET {{host}}/api/health

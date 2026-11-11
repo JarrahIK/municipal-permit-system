@@ -1,0 +1,36 @@
+# Shared base for BOTH environments — see the README.
+#   dev:   docker compose up --build                  (docker-compose.override.yml is added automatically)
+#   prod:  docker compose -p permit-prod --env-file .env.prod -f docker-compose.yml -f docker-compose.prod.yml up -d --no-build
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${SA_PASSWORD:?set SA_PASSWORD}
+    volumes:
+      - db-data:/var/opt/mssql
+    healthcheck:
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P \"$$MSSQL_SA_PASSWORD\" -Q \"SELECT 1\" || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 20s
+
+  api:
+    build: .
+    image: ${API_IMAGE:-municipal-permit-api:local}
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
+      ConnectionStrings__DefaultConnection: "Server=db,1433;Database=${DB_NAME:?set DB_NAME};User Id=sa;Password=${SA_PASSWORD};TrustServerCertificate=True"
+      Jwt__Key: ${JWT_KEY:?set JWT_KEY}
+      Security__EncryptionKey: ${ENCRYPTION_KEY:?set ENCRYPTION_KEY}
+      Cors__AllowedOrigins__0: ${CORS_ORIGIN:-http://localhost:3000}
+      Database__MigrateOnStartup: "true"
+    ports:
+      - "8080:8080"
+
+volumes:
+  db-data:

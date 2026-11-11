@@ -1,0 +1,8 @@
+# PRODUCTION overrides. Used with an explicit -f, so docker-compose.override.yml is NOT applied:
+# no published database port, no API docs, no demo accounts.
+# The api image is the one the CI/CD pipeline published (API_IMAGE in .env.prod).
+services:
+  db:
+    restart: unless-stopped
+  api:
+    restart: unless-stopped

@@ -1,0 +1,27 @@
+## Build output
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+
+## Visual Studio
+.vs/
+*.user
+*.suo
+*.userprefs
+
+## Secrets / local settings — never commit these
+.env
+.env.*
+!.env.example
+!.env.prod.example
+appsettings.Local.json
+secrets.json
+
+## Test output
+TestResults/
+*.trx
+
+## OS
+.DS_Store
+Thumbs.db
