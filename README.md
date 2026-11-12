@@ -165,7 +165,7 @@ bcrypt-hashed; phone numbers and addresses are AES-256-GCM encrypted at rest; "u
 "wrong password" look identical to the caller. Use `[Authorize(Roles = AppRoles.Surveyor)]` etc. to
 protect future endpoints.
 
-## Deliberately mocked
+## Things we will do but Mocked to simulate real payments
 
 - **Civil Status check (SFR6)** — will be a local stand-in, not a real government integration.
 - **Payments** — no gateway: confirming a payment flips a status and creates a receipt; a hash of each
